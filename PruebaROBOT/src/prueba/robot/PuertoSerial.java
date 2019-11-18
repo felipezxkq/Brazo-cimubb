@@ -54,6 +54,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -78,6 +79,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     /**
      * Creates new form PuertoSerial
      */
+     public int patrones=9;
      public PuertoSerial() {
         initComponents();
         this.setLocationRelativeTo(null);      
@@ -156,20 +158,16 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         inicia_camara1 = new javax.swing.JButton();
         detener_camara = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1540, 900));
-        setPreferredSize(new java.awt.Dimension(1572, 1150));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -256,16 +254,16 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                 inicia_camaraActionPerformed(evt);
             }
         });
-        getContentPane().add(inicia_camara, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 780, 230, 50));
+        getContentPane().add(inicia_camara, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 90, 230, 50));
 
         capturar_imagen.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        capturar_imagen.setText("Capturar imagen");
+        capturar_imagen.setText("Crear patron");
         capturar_imagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 capturar_imagenActionPerformed(evt);
             }
         });
-        getContentPane().add(capturar_imagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 850, 230, 50));
+        getContentPane().add(capturar_imagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 150, 230, 50));
 
         conectar.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         conectar.setText("Conectar");
@@ -300,7 +298,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
 
         jLabel15.setFont(new java.awt.Font("Century Gothic", 0, 30)); // NOI18N
         jLabel15.setText("Cámara");
-        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(1240, 730, -1, -1));
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 40, -1, -1));
 
         jLabel16.setFont(new java.awt.Font("Century Gothic", 0, 30)); // NOI18N
         jLabel16.setText("SCORBOT");
@@ -324,20 +322,8 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 570, -1, -1));
         getContentPane().add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 990, 40, 20));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo-cimubb.png"))); // NOI18N
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 10, -1, -1));
-
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/scorbot.png"))); // NOI18N
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 150, -1, -1));
-
         jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/camara2.png"))); // NOI18N
-        getContentPane().add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 710, -1, -1));
-
-        jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ins-2.png"))); // NOI18N
-        getContentPane().add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 380, -1, -1));
-
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/n2.png"))); // NOI18N
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 240, -1, -1));
+        getContentPane().add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 20, -1, -1));
 
         inicia_camara1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         inicia_camara1.setText("Iniciar cámara");
@@ -346,7 +332,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                 inicia_camara1ActionPerformed(evt);
             }
         });
-        getContentPane().add(inicia_camara1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 780, 230, 50));
+        getContentPane().add(inicia_camara1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 90, 230, 50));
 
         detener_camara.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         detener_camara.setText("Detener cámara");
@@ -355,7 +341,15 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                 detener_camaraActionPerformed(evt);
             }
         });
-        getContentPane().add(detener_camara, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 910, 230, 50));
+        getContentPane().add(detener_camara, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 220, 230, 50));
+
+        jButton1.setText("Comparar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 310, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -478,27 +472,24 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         // Botón capturar imagen
         myThread.runnable = false;
         webSource.release();
-        int returnVal = jFileChooser2.showSaveDialog(this);
-        if (returnVal == jFileChooser2.APPROVE_OPTION){
-            File file = jFileChooser2.getSelectedFile();
-            Imgcodecs.imwrite(file.getPath(),frame);
-            JOptionPane.showMessageDialog(aviso,"imagen guardada con éxito");
-                webSource = new VideoCapture(0);
-                myThread = new DaemonThread();
-                Thread t = new Thread(myThread);
-                t.setDaemon(true);
-                myThread.runnable = true;
-                t.start();
-                
-        } else {
-            JOptionPane.showMessageDialog(aviso,"Error al guardar la imagen");
-            webSource = new VideoCapture(0);
-            myThread = new DaemonThread();
-            Thread t = new Thread(myThread);
-            t.setDaemon(true);
-            myThread.runnable = true;
-            t.start();
-        }
+        Imgcodecs.imwrite("patron"+patrones+".jpg", frame);
+        CreaP p;
+         try {
+            p = new CreaP(patrones);
+            String pa="patron"+p+".jpg";
+            ImageIcon imageIcon= new ImageIcon("C:\\Users\\nicol\\Documents\\practica\\Brazo-cimubb-master\\Brazo-cimubb-master\\PruebaROBOT\\"+pa);
+            imageIcon.setImage(imageIcon.getImage());
+            p.setVisible(true);
+            patrones=+1;
+         } catch (IOException ex) {
+             Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        webSource = new VideoCapture(0);
+        myThread = new DaemonThread();
+        Thread t = new Thread(myThread);
+        t.setDaemon(true);
+        myThread.runnable = true;
+        t.start();       
     }//GEN-LAST:event_capturar_imagenActionPerformed
 
     private void conectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conectarActionPerformed
@@ -576,6 +567,11 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         
         
     }//GEN-LAST:event_detener_camaraActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Mat orig = Imgcodecs.imread("vacio.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        encontrarPieza(orig);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void enviar_comando(String comando) throws IOException{
         cadena = comando;
@@ -762,7 +758,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         int pieza_encontrada = -1;
         double Delta = -1; 
         int maxima_coincidencia=0;
-        for(int i=1;i<9;i++){
+        for(int i=1;i<patrones;i++){
             Mat patron = Imgcodecs.imread("patron"+i+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
             int result_rows = foto.rows()-patron.rows()+1;
             int result_cols = foto.cols()-patron.cols()+1;
@@ -877,12 +873,11 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     private javax.swing.JButton enviar;
     private javax.swing.JButton inicia_camara;
     private javax.swing.JButton inicia_camara1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JFileChooser jFileChooser2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -894,8 +889,6 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
