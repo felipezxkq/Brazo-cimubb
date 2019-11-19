@@ -79,7 +79,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     /**
      * Creates new form PuertoSerial
      */
-     public int patrones=9;
+     public  int patrones=10;
      public PuertoSerial() {
         initComponents();
         this.setLocationRelativeTo(null);      
@@ -162,6 +162,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         inicia_camara1 = new javax.swing.JButton();
         detener_camara = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -350,6 +351,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             }
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 310, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 340, 280, 20));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -480,7 +482,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             ImageIcon imageIcon= new ImageIcon("C:\\Users\\nicol\\Documents\\practica\\Brazo-cimubb-master\\Brazo-cimubb-master\\PruebaROBOT\\"+pa);
             imageIcon.setImage(imageIcon.getImage());
             p.setVisible(true);
-            patrones=+1;
+            patrones=patrones+1;
          } catch (IOException ex) {
              Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
          }
@@ -569,6 +571,11 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     }//GEN-LAST:event_detener_camaraActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try{
+            Imgcodecs.imwrite("vacio.jpg", frame); //guarda la imagen capturada 
+        }catch(Exception e){
+            System.out.println("ERROR AL TOMAR FOTO:" + e);
+        }
         Mat orig = Imgcodecs.imread("vacio.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
         encontrarPieza(orig);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -796,7 +803,10 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                 System.out.println("El porcentaje para el patron 3 es: "+aux+"%");
                 }if(i==8){
                 jLabel9.setText("El porcentaje para el patron 4 es: "+aux+"%" );
-            } 
+                }if(i==(patrones-1)){
+                    pieza_encontrada=(patrones-1);
+                    jLabel3.setText("EL porcentaje para el patron "+(patrones-1)+" es: "+aux+"%");
+                } 
             if(aux>maxima_coincidencia) maxima_coincidencia = aux;
             }            
             if (mmr.maxVal > Delta){
@@ -889,6 +899,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
