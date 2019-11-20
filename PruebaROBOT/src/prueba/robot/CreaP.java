@@ -30,7 +30,7 @@ public class CreaP extends javax.swing.JFrame {
     String nombre;
     public CreaP(int patron) throws IOException{
         initComponents();
-        String direccion="C://Users//nicol//Documents//practica//Brazo-cimubb-master//Brazo-cimubb-master//PruebaROBOT//patron"+patron+".jpg";
+        String direccion="patron"+patron+".jpg";
         nombre="patron"+patron+".jpg";
         img=ImageIO.read(new File(direccion));
         ImageIcon imgi= new ImageIcon(img);
