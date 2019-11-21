@@ -876,8 +876,8 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         int maxima_coincidencia=0;
         for(int i=1;i<patrones;i++){
             Mat patron = Imgcodecs.imread("patron"+i+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
-            int result_rows = foto.rows()-patron.rows()+1;
-            int result_cols = foto.cols()-patron.cols()+1;
+            int result_rows = foto.rows()-patron.rows() + 1;
+            int result_cols = foto.cols()-patron.cols() + 1;
             Mat result = new Mat(result_rows,result_cols,CvType.CV_32FC1);
 
             //Buscando los emparejamientos
@@ -903,7 +903,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             }   
             if(maxima_coincidencia < 80 && i>4){
                 System.out.println("Hubo una coincidencia menor a 80: " + maxima_coincidencia);
-                if(i==5){
+                if(i==5){ 
                 jLabel6.setText("El porcentaje para el patron 1 es: "+aux+"%" );    
                 }if(i==6){
                 jLabel7.setText("El porcentaje para el patron 2 es: "+aux+"%" );
