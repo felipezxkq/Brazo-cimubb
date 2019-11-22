@@ -778,7 +778,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                         int pieza_encontrada = -1;                     
                         String nombre = "";                                              
                         pieza_encontrada = encontrarPieza(orig);
-                        
+                        System.out.println("PIEZA ENCONTRADA: "+pieza_encontrada);
                    
                         switch(pieza_encontrada){
                             case 1://UNO
@@ -874,7 +874,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         int pieza_encontrada = -1;
         double Delta = -1; 
         int maxima_coincidencia=0;
-        for(int i=1;i<patrones;i++){
+        for(int i=1;i<9;i++){
             Mat patron = Imgcodecs.imread("patron"+i+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
             int result_rows = foto.rows()-patron.rows() + 1;
             int result_cols = foto.cols()-patron.cols() + 1;
@@ -912,9 +912,9 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                 System.out.println("El porcentaje para el patron 3 es: "+aux+"%");
                 }if(i==8){
                 jLabel9.setText("El porcentaje para el patron 4 es: "+aux+"%" );
-                }
+                }            
+            }  
             if(aux>maxima_coincidencia) maxima_coincidencia = aux;
-            }            
             if (mmr.maxVal > Delta){
                 Delta = mmr.maxVal;                
                 pieza_encontrada=i;               
