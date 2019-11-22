@@ -105,7 +105,8 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                                 Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
                                 BufferedImage buff = (BufferedImage) im;
                                 Graphics g = jPanel2.getGraphics();
-                                g.drawImage(buff, 10, 10, jPanel2.getWidth() - 10, jPanel2.getHeight() - 10, 0, 0, buff.getWidth(), buff.getHeight(), null);                               
+                                g.drawImage(buff, 10, 10, jPanel2.getWidth() - 10, jPanel2.getHeight() - 10, 0, 0, buff.getWidth(), buff.getHeight(), null);
+                                
                              }
                              catch(Exception ex)
                              {
@@ -311,10 +312,9 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -646,10 +646,11 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
            }
         } catch (Exception e){
             System.out.println(e);
-        }
-        
+        }   
     }//GEN-LAST:event_conectarActionPerformed
 
+
+    
     private void desconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desconectarActionPerformed
                 //Botón desconectar
         try{
@@ -926,6 +927,22 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         System.out.println("PIEZA: " + pieza_encontrada);
         return pieza_encontrada;
     }
+    
+    public void reconocer_patron(Mat foto){
+        Mat patron = Imgcodecs.imread("banana.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        int result_rows = foto.rows()-patron.rows() + 1;
+        int result_cols = foto.cols()-patron.cols() + 1;
+        Mat result = new Mat(result_rows,result_cols,CvType.CV_32FC1);
+
+        //Buscando los emparejamientos
+        Imgproc.matchTemplate(foto, patron, result, Imgproc.TM_CCOEFF_NORMED);                            
+   
+        // / Encontrando el mejor emparejamiento con  minMaxLoc
+        Core.MinMaxLocResult mmr = Core.minMaxLoc(result); 
+        if(mmr.maxVal > 0.8){
+            jLabel2.setText("El nuevo patrón banana.jpg ha sido reconocido");
+        }
+    }
  
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -978,6 +995,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     private Thread thread_camara;
     JFrame aviso = new JFrame();
     volatile boolean shutdown = false;
+    private int x1, x2, y1, y2;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton capturar_imagen;

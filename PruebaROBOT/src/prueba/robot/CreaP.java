@@ -246,7 +246,7 @@ public class CreaP extends javax.swing.JFrame {
             try{
                 File result_jpg = new File(nombre);
                 ImageIO.write(img, "jpg", result_jpg);
-                JOptionPane.showMessageDialog(null, "Se a agregado el patron bajo el nombre de "+nombre);
+                JOptionPane.showMessageDialog(null, "Se ha agregado el patron bajo el nombre de "+nombre);
                 this.setVisible(false);
             }catch(IOException e){
                 System.out.println(e);
@@ -258,7 +258,7 @@ public class CreaP extends javax.swing.JFrame {
             try{
                 File result_jpg = new File(nombren);
                 ImageIO.write(img, "jpg", result_jpg);
-                JOptionPane.showMessageDialog(null, "Se a agregado el patron bajo el nombre de "+nombren);
+                JOptionPane.showMessageDialog(null, "Se ha agregado el patron bajo el nombre de "+nombren);
                 f.delete();
                 this.setVisible(false);
             }catch(IOException e){
