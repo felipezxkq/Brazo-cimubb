@@ -79,7 +79,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     /**
      * Creates new form PuertoSerial
      */
-     public  int patrones=10;
+     public  int patrones=1;
      public PuertoSerial() {
         initComponents();
         this.setLocationRelativeTo(null);      
@@ -597,15 +597,13 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         // Botón capturar imagen
         myThread.runnable = false;
         webSource.release();
+        patrones=this.contar();
         Imgcodecs.imwrite("patron"+patrones+".jpg", frame);
         CreaP p;
          try {
-            p = new CreaP(patrones);
-            String pa="patron"+p+".jpg";
-            ImageIcon imageIcon= new ImageIcon("C:\\Users\\nicol\\Documents\\practica\\Brazo-cimubb-master\\Brazo-cimubb-master\\PruebaROBOT\\"+pa);
-            imageIcon.setImage(imageIcon.getImage());
+            p = new CreaP(this, patrones);
             p.setVisible(true);
-            patrones=patrones+1;
+            patrones=p.c_patron();
          } catch (IOException ex) {
              Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
          }
@@ -943,7 +941,16 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             jLabel2.setText("El nuevo patrón banana.jpg ha sido reconocido");
         }
     }
- 
+    
+    public int contar(){
+        File file=new File("patron"+patrones+".jpg");
+        int cantidad=2;
+        while(file.exists()){
+            file=new File("patron"+cantidad+".jpg");
+            cantidad++;
+        }
+        return cantidad-1;
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

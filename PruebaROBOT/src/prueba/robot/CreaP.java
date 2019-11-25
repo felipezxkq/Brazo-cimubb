@@ -27,11 +27,14 @@ public class CreaP extends javax.swing.JFrame {
     public CreaP() {
         initComponents();
     } 
+    PuertoSerial principal;
     BufferedImage img;
     String nombre;
     File f;
-    public CreaP(int patron) throws IOException{
+    int p;
+    public CreaP(PuertoSerial principal,int patron) throws IOException{
         initComponents();
+        this.principal=principal;
         String direccion="patron"+patron+".jpg";
         nombre="patron"+patron+".jpg";
         f=new File(direccion);
@@ -39,6 +42,7 @@ public class CreaP extends javax.swing.JFrame {
         ImageIcon imgi= new ImageIcon(img);
         imgi.setImage(imgi.getImage());
         jLabel1.setIcon(imgi);
+        p=patron;
     }
 
     /**
@@ -246,6 +250,8 @@ public class CreaP extends javax.swing.JFrame {
             try{
                 File result_jpg = new File(nombre);
                 ImageIO.write(img, "jpg", result_jpg);
+                p=p+1;
+                this.principal.patrones++;
                 JOptionPane.showMessageDialog(null, "Se ha agregado el patron bajo el nombre de "+nombre);
                 this.setVisible(false);
             }catch(IOException e){
@@ -267,6 +273,9 @@ public class CreaP extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton3ActionPerformed
+    public int c_patron(){
+        return p;
+    }
 
     /**
      * @param args the command line arguments
@@ -299,7 +308,7 @@ public class CreaP extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new CreaP(1).setVisible(true);
+                    new CreaP().setVisible(true);
                 } catch (IOException ex) {
                     Logger.getLogger(CreaP.class.getName()).log(Level.SEVERE, null, ex);
                 }
