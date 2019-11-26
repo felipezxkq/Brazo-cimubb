@@ -118,6 +118,12 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
          }
    }
     
+    public void dibujar_cuadrado(Graphics g){
+        
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -758,8 +764,14 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                    System.out.println(mensaje);
                    if (mensaje.contains("saok")){
                    enviar_comando("RUN SCAN");}
-                   if (mensaje.contains("acok")){
-                   enviar_comando("RUN TOMA");}
+                   if (mensaje.contains("ver bandeja")){
+                       try{
+                            Imgcodecs.imwrite("vacio.jpg", frame); //guarda la imagen capturada 
+                        }catch(Exception e){
+                            System.out.println("ERROR AL TOMAR FOTO:" + e);
+                        }
+                        
+                   }
                    if (mensaje.contains("seok")){
                    enviar_comando("RUN TOMA");}
                    if (mensaje.contains("alok")){
@@ -1003,6 +1015,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     JFrame aviso = new JFrame();
     volatile boolean shutdown = false;
     private int x1, x2, y1, y2;
+    //private Rectangle uno, dos, tres, cuatro;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton capturar_imagen;
