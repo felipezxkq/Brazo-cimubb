@@ -6,6 +6,15 @@
 package prueba.robot;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -16,10 +25,17 @@ public class ReconocerP extends javax.swing.JFrame {
     /**
      * Creates new form ReconocerP
      */
+    int cantidad=2;
+    String nombreOrigen;
+    PuertoSerial puerto;
     public ReconocerP() {
         initComponents();
     }
-
+    public ReconocerP(String nombre, PuertoSerial puerto) {
+        initComponents();
+        nombreOrigen=nombre;
+        this.puerto=puerto;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,7 +87,6 @@ public class ReconocerP extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         File file=new File("patron"+1+".jpg");
-        int cantidad=2;
         while(file.exists()){
             file=new File("patron"+cantidad+".jpg");
             cantidad++;
@@ -82,7 +97,29 @@ public class ReconocerP extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        String nombre=(String)jComboBox1.getSelectedItem();
+        Mat patron= Imgcodecs.imread(nombre,Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        Mat orig=Imgcodecs.imread(nombreOrigen,Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        int result_rows = orig.rows()-patron.rows() + 1;
+        int result_cols = orig.cols()-patron.cols() + 1;
+        Mat result = new Mat(result_rows,result_cols,CvType.CV_32FC1);
+        Imgproc.matchTemplate(orig, patron, result, Imgproc.TM_CCOEFF_NORMED);                            
+        Core.MinMaxLocResult mmr = Core.minMaxLoc(result);                               
+        int aux = (int) (mmr.maxVal*100);
+        System.out.print(aux);
+        if(aux>80){
+            JOptionPane.showMessageDialog(null, "La imagen coincide con el patron deseado en un: "+aux+"%");
+            try {
+                puerto.enviar_comando("run patron");
+            } catch (IOException ex) {
+                Logger.getLogger(ReconocerP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            this.setVisible(false);    
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "La imagen no coincide con el patron deseado." );
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -307,11 +307,7 @@ public class CreaP extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new CreaP().setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(CreaP.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new CreaP().setVisible(true);
             }
         });
     }
