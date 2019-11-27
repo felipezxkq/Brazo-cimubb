@@ -37,9 +37,12 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -105,7 +108,12 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                                 Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
                                 BufferedImage buff = (BufferedImage) im;
                                 Graphics g = jPanel2.getGraphics();
-                                g.drawImage(buff, 10, 10, jPanel2.getWidth() - 10, jPanel2.getHeight() - 10, 0, 0, buff.getWidth(), buff.getHeight(), null);
+                                if(dibujar_rectangulos){
+                                    dibujar_rectangulos(g);
+                                }else{
+                                    g.drawImage(buff, 10, 10, jPanel2.getWidth() - 10, jPanel2.getHeight() - 10, 0, 0, buff.getWidth(), buff.getHeight(), null);
+
+                                }
                                 
                              }
                              catch(Exception ex)
@@ -118,10 +126,54 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
          }
    }
     
-    public void dibujar_cuadrado(Graphics g){
-        
-        
+    public void detectar_rectangulos(){        
+        Imgcodecs.imwrite("vacio2.jpg", frame);
+        Mat template = Imgcodecs.imread("vacio2.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        for(int i=1; i<5; i++){            
+            Mat patron = Imgcodecs.imread(i+"enBandeja.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
+            Core.MinMaxLocResult matched = reconocer_patron(template, i+"enBandeja.jpg");
+            
+            if(matched.maxVal > 0.8){ // si es que efectivamente encontró el patrón
+                System.out.println("PATRON ENCONTRADO: "+i);
+                if(i==1){
+                    esta_uno = true;
+                    System.out.println("SE ENCONTRO EL UNO");
+                }else if(i==2){
+                    esta_dos = true;
+                }else if(i==3){
+                    esta_tres = true;
+                }       
+                else if(i==4){
+                    esta_cuatro = true;
+                }
+            } 
+        }        
     }
+    public void no_estan(){
+        esta_uno = false;
+        esta_dos = false;
+        esta_tres = false;
+        esta_cuatro = false;                
+    }
+    
+    public void dibujar_rectangulos(Graphics g){
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(10));
+        g2.setColor(Color.RED);
+        if(esta_uno){             
+                g2.drawRect((int)uno.x, (int)uno.y, 215, 100);
+        }
+        if(esta_dos){
+                g2.drawRect((int)dos.x, (int)dos.y, 215, 100);
+        }
+        if(esta_tres){
+                g2.drawRect((int)tres.x, (int)tres.y, 200, 100);
+        }
+        if(esta_cuatro){
+                g2.drawRect((int)cuatro.x, (int)cuatro.y, 200, 100);
+        }
+    }
+    
     
     
     /**
@@ -803,22 +855,23 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                    String mensaje = new String(bufferLectura);
                    System.out.println(mensaje);
                    if (mensaje.contains("saok")){
-                   enviar_comando("RUN SCAN");}
-                   if (mensaje.contains("ver bandeja")){
-                       try{
-                            Imgcodecs.imwrite("vacio.jpg", frame); //guarda la imagen capturada 
-                        }catch(Exception e){
-                            System.out.println("ERROR AL TOMAR FOTO:" + e);
-                        }
-                        
+                        dibujar_rectangulos = false;
+                        no_estan();
+                        enviar_comando("RUN SCAN");}
+                   if (mensaje.contains("dibuja")){
+                       System.out.println("INTENTA DIBUJAR");
+                       detectar_rectangulos();
+                       dibujar_rectangulos = true;                        
                    }
-                   if (mensaje.contains("seok")){
-                   enviar_comando("RUN TOMA");}
+                   if (mensaje.contains("para")){
+                       System.out.println("PARO DE DIBUJAR");
+                       dibujar_rectangulos = false;
+                       no_estan();
+                   }
                    if (mensaje.contains("alok")){
                    enviar_comando("RUN TOMA");}
                    
                    if(mensaje.contains("okgo")){                        
-                        System.out.println("llega");
                         try{
                             Imgcodecs.imwrite("vacio.jpg", frame); //guarda la imagen capturada 
                         }catch(Exception e){
@@ -827,7 +880,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
                         
                         Mat orig = Imgcodecs.imread("vacio.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
                         int pieza_encontrada = -1;                     
-                        String nombre = "";                                              
+                        String nombre = ""; 
                         pieza_encontrada = encontrarPieza(orig);
                         System.out.println("PIEZA ENCONTRADA: "+pieza_encontrada);
                    
@@ -925,6 +978,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         int pieza_encontrada = -1;
         double Delta = -1; 
         int maxima_coincidencia=0;
+        
         for(int i=1;i<9;i++){
             Mat patron = Imgcodecs.imread("patron"+i+".jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
             int result_rows = foto.rows()-patron.rows() + 1;
@@ -932,7 +986,8 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             Mat result = new Mat(result_rows,result_cols,CvType.CV_32FC1);
 
             //Buscando los emparejamientos
-            Imgproc.matchTemplate(foto, patron, result, Imgproc.TM_CCOEFF_NORMED);                            
+            
+            Imgproc.matchTemplate(foto, patron, result, Imgproc.TM_CCOEFF_NORMED); 
    
             // / Encontrando el mejor emparejamiento con  minMaxLoc
             Core.MinMaxLocResult mmr = Core.minMaxLoc(result);                            
@@ -940,7 +995,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             //Imprimir en consola valores del emparejamiento escogido
             // Fija si existe match o no con la imagen y el patron
             System.out.println("maxVal: "+mmr.maxVal+", i: "+i);
-                        
+           
             int aux = (int) (mmr.maxVal*100);
             
             if(i==1){
@@ -978,6 +1033,22 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         return pieza_encontrada;
     }
     
+    // devuelve un número tal que si el valor es mayor 
+    public Core.MinMaxLocResult reconocer_patron(Mat plantilla, String patron_a_reconocer){
+        Mat patron = Imgcodecs.imread(patron_a_reconocer,Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        int result_rows = plantilla.rows()-patron.rows() + 1;
+        int result_cols = plantilla.cols()-patron.cols() + 1;
+        Mat result = new Mat(result_rows,result_cols,CvType.CV_32FC1);
+
+        //Buscando los emparejamientos
+        Imgproc.matchTemplate(plantilla, patron, result, Imgproc.TM_CCOEFF_NORMED);                            
+   
+        // / Encontrando el mejor emparejamiento con  minMaxLoc
+        Core.MinMaxLocResult mmr = Core.minMaxLoc(result); 
+        return mmr;          
+    }
+    
+    /*
     public void reconocer_patron(Mat foto){
         Mat patron = Imgcodecs.imread("banana.jpg",Imgcodecs.CV_LOAD_IMAGE_COLOR);
         int result_rows = foto.rows()-patron.rows() + 1;
@@ -993,6 +1064,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
             jLabel2.setText("El nuevo patrón banana.jpg ha sido reconocido");
         }
     }
+    */
     
     public int contar(){
         File file=new File("patron"+patrones+".jpg");
@@ -1055,6 +1127,11 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     JFrame aviso = new JFrame();
     volatile boolean shutdown = false;
     private int x1, x2, y1, y2;
+    private boolean dibujar_rectangulos = false;
+    private boolean esta_uno = false, esta_dos = false, esta_tres = false, esta_cuatro = false;
+    private Point uno = new Point(805, 107), dos = new Point(840, 333), tres = new Point(316, 138), cuatro = new Point(354, 340);
+    // uno: (805, 107), (1012, 95) ///dos: (840, 333), (1057, 324) /// tres: (316, 138), (516, 130)/// cuatro: (354, 340), (547, 332)
+    
     //private Rectangle uno, dos, tres, cuatro;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
