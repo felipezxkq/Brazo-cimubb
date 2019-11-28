@@ -91,7 +91,7 @@ public class ReconocerP extends javax.swing.JFrame {
             file=new File("patron"+cantidad+".jpg");
             cantidad++;
         }
-        for(int i=1;i<cantidad;i++){
+        for(int i=1;i<(cantidad-1);i++){
             jComboBox1.addItem("patron"+i+".jpg");
         }
     }//GEN-LAST:event_formWindowActivated
@@ -114,7 +114,6 @@ public class ReconocerP extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(ReconocerP.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
             this.setVisible(false);    
         }
         else{

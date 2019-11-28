@@ -557,7 +557,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     private void comenzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comenzarActionPerformed
         // BOTÓN COMENZAR
         detener_robot.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.GREEN, Color.GREEN));
-         PORT_NAME = "COM1";//(String)jComboBox1.getSelectedItem();
+        PORT_NAME = "COM1";//(String)jComboBox1.getSelectedItem();
         CommPortIdentifier portID = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
         while (portEnum.hasMoreElements()) {
@@ -669,25 +669,33 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
     }//GEN-LAST:event_enviarActionPerformed
 
     private void capturar_imagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_capturar_imagenActionPerformed
-        // Botón capturar imagen
-        myThread.runnable = false;
-        webSource.release();
+        conectarActionPerformed(evt);
+        webSource = new VideoCapture(0); //Inicia la camara default
+        if(myThread==null && thread_camara==null){
+            myThread = new DaemonThread();
+            thread_camara = new Thread(myThread);
+            thread_camara.setName("THREAD CAMARA");
+            //thread_camara.setDaemon(false);
+            myThread.runnable = true;
+            thread_camara.start();
+        }
+        detener_camara.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.GREEN, Color.GREEN));
+        try {
+            enviar_comando("run scan2");
+        } catch (IOException ex) {
+            Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        esperar(7);
         patrones=this.contar();
         Imgcodecs.imwrite("patron"+patrones+".jpg", frame);
         CreaP p;
-         try {
+        try {
             p = new CreaP(this, patrones);
             p.setVisible(true);
             patrones=p.c_patron();
-         } catch (IOException ex) {
-             Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        webSource = new VideoCapture(0);
-        myThread = new DaemonThread();
-        Thread t = new Thread(myThread);
-        t.setDaemon(true);
-        myThread.runnable = true;
-        t.start();       
+        } catch (IOException ex) {
+            Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_capturar_imagenActionPerformed
 
     private void conectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conectarActionPerformed
@@ -746,7 +754,7 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
 
     private void inicia_camaraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicia_camaraActionPerformed
         //Botón iniciar cámara
-        webSource = new VideoCapture(0);
+         webSource = new VideoCapture(0);
         myThread = new DaemonThread();
         thread_camara = new Thread(myThread);
         myThread.runnable = true;
@@ -759,23 +767,30 @@ public class PuertoSerial extends javax.swing.JFrame implements Runnable,SerialP
         webSource.release();
         JOptionPane.showMessageDialog(null,"Cámara desconectada!");
         detener_camara.setBorder(BorderFactory.createEmptyBorder());
-        
-        
     }//GEN-LAST:event_detener_camaraActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        inicia_camaraActionPerformed(evt);
         conectarActionPerformed(evt);
+        webSource = new VideoCapture(0); //Inicia la camara default
+        if(myThread==null && thread_camara==null){
+            myThread = new DaemonThread();
+            thread_camara = new Thread(myThread);
+            thread_camara.setName("THREAD CAMARA");
+            //thread_camara.setDaemon(false);
+            myThread.runnable = true;
+            thread_camara.start();
+        }
+        detener_camara.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.GREEN, Color.GREEN));
         try {
             enviar_comando("run scan2");
         } catch (IOException ex) {
             Logger.getLogger(PuertoSerial.class.getName()).log(Level.SEVERE, null, ex);
         }
-         esperar(7);
-         Imgcodecs.imwrite("origen.jpg", frame);
-         ReconocerP reconocer=new ReconocerP("origen.jpg",this);
-         reconocer.setVisible(true);
-         
+        esperar(7);
+        patrones=this.contar();
+        Imgcodecs.imwrite("origen.jpg", frame);
+        ReconocerP reconocer=new ReconocerP("origen.jpg",this);
+        reconocer.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
      public static void esperar(int segundos){

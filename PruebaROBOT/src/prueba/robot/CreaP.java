@@ -253,6 +253,7 @@ public class CreaP extends javax.swing.JFrame {
                 p=p+1;
                 this.principal.patrones++;
                 JOptionPane.showMessageDialog(null, "Se ha agregado el patron bajo el nombre de "+nombre);
+                this.principal.enviar_comando("move 0");
                 this.setVisible(false);
             }catch(IOException e){
                 System.out.println(e);
